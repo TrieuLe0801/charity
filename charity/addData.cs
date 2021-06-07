@@ -11,6 +11,7 @@ using System.Data;
 using System.Data.OleDb;
 using Excel = Microsoft.Office.Interop.Excel;
 using charity.Data;
+using System.Globalization;
 
 namespace charity
 {
@@ -26,7 +27,7 @@ namespace charity
             for (int col = 1; col <= max_col; col++)
             {
                 string title = (string)values[1, col];
-                dgv.Columns.Add("col_" + title, title);
+                dgv.Columns.Add(title, title);
             }
         }
 
@@ -65,20 +66,20 @@ namespace charity
                 // Get the data.
                 SetGridContents(gridview, values, rowCount, colCount);
 
-                for (int i = 1; i <= rowCount; i++)
-                {
-                    for (int j = 1; j <= colCount; j++)
-                    {
-                        Excel.Range range = (excelWorksheet.Cells[i, j] as Excel.Range);
-                        if(range.Value != null)
-                        {
-                            string cellValue = range.Value.ToString();
-                            Console.WriteLine(cellValue);
-                        }
+                //for (int i = 1; i <= rowCount; i++)
+                //{
+                //    for (int j = 1; j <= colCount; j++)
+                //    {
+                //        Excel.Range range = (excelWorksheet.Cells[i, j] as Excel.Range);
+                //        if(range.Value != null)
+                //        {
+                //            string cellValue = range.Value.ToString();
+                //            Console.WriteLine(cellValue);
+                //        }
                         
-                        //do anything
-                    }
-                }
+                //        //do anything
+                //    }
+                //}
 
                 excelWorkbook.Close();
                 excelApp.Quit();
@@ -86,8 +87,6 @@ namespace charity
         }
         public addData()
         {
-            Data.Data charityData = new Data.Data();
-            DataTable dtexcel = new DataTable();
             InitializeComponent();
             ReadSample();
             //String name = "Sheet1";
@@ -112,6 +111,65 @@ namespace charity
             this.Hide();
             Main main = new Main();
             main.Show();
+        }
+
+        private void addBtn_Click(object sender, EventArgs e)
+        {
+            int numberRows = 0;
+            int lastId = 0;
+            DataRow workRow;
+            Data.Data charityData = new Data.Data();
+            DataTable dtexcel = new DataTable();
+            for(int i = 0; i< gridview.Columns.Count; i++)
+            {
+                Console.WriteLine(gridview.Columns[i].Name);
+                dtexcel.Columns.Add(gridview.Columns[i].Name);
+            }
+            //dtexcel = gridview.DataSource as DataTable;
+            charityData.dateCharity = this.dateTimePicker1.Value.Date;
+            charityData.numberMoney = float.Parse(moneyField.Text, CultureInfo.InvariantCulture);
+            charityData.inOutMoney = inOutcmbobox.Text;
+            charityData.commentCharity = cmtBox.Text;
+            if (gridview.DataSource != null)
+            {
+                Console.WriteLine(dtexcel.Rows.Count);
+                dtexcel = gridview.DataSource as DataTable;
+                lastId = dtexcel.Rows.Count;
+                charityData.id = lastId;
+                workRow = dtexcel.NewRow();
+                workRow[@"Id"] = charityData.id;
+                workRow[@"Thu/Chi"] = charityData.inOutMoney;
+                workRow[@"Ngày"] = charityData.dateCharity;
+                workRow[@"Số Tiền"] = charityData.numberMoney;
+                workRow[@"Ghi Chú"] = charityData.commentCharity;
+                dtexcel.Rows.Add(workRow);
+                gridview.DataSource = dtexcel;
+            }
+            else
+            {
+                Console.WriteLine(0);
+                charityData.id = 0;
+                workRow = dtexcel.NewRow();
+                workRow[@"Id"] = charityData.id;
+                workRow[@"Thu/Chi"] = charityData.inOutMoney;
+                workRow[@"Ngày"] = charityData.dateCharity;
+                workRow[@"Số Tiền"] = charityData.numberMoney;
+                workRow[@"Ghi Chú"] = charityData.commentCharity;
+                dtexcel.Rows.Add(workRow);
+                gridview.Columns.Clear();
+                gridview.DataSource = dtexcel;
+
+            }
+            
+            
+            //if (!float.TryParse(moneyField.Text, out _))
+            //{
+            //    MessageBox.Show(@"Hãy điền số vào ô này");
+            //}
+            //else
+            //{
+                
+            //}
         }
     }
 }
