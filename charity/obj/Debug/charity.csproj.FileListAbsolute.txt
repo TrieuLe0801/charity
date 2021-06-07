@@ -1,0 +1,14 @@
+D:\work\charity\charity\bin\Debug\charity.exe.config
+D:\work\charity\charity\bin\Debug\charity.exe
+D:\work\charity\charity\bin\Debug\charity.pdb
+D:\work\charity\charity\obj\Debug\charity.csprojAssemblyReference.cache
+D:\work\charity\charity\obj\Debug\charity.Main.resources
+D:\work\charity\charity\obj\Debug\charity.Properties.Resources.resources
+D:\work\charity\charity\obj\Debug\charity.csproj.GenerateResource.cache
+D:\work\charity\charity\obj\Debug\charity.csproj.CoreCompileInputs.cache
+D:\work\charity\charity\obj\Debug\charity.exe
+D:\work\charity\charity\obj\Debug\charity.pdb
+D:\work\charity\charity\obj\Debug\charity.addData.resources
+D:\work\charity\charity\bin\Debug\System.Data.OleDb.dll
+D:\work\charity\charity\bin\Debug\System.Data.OleDb.xml
+D:\work\charity\charity\obj\Debug\charity.csproj.CopyComplete
