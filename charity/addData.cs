@@ -17,6 +17,7 @@ namespace charity
 {
     public partial class addData : Form
     {
+        string parentPath = System.IO.Directory.GetParent(System.IO.Directory.GetParent(System.IO.Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString();
         // Set the grid's column names from row 1.
         private void SetGridColumns(DataGridView dgv,
             object[,] values, int max_col)
@@ -50,7 +51,7 @@ namespace charity
             Excel.Application excelApp = new Excel.Application();
             if (excelApp != null)
             {
-                Excel.Workbook excelWorkbook = excelApp.Workbooks.Open(@"D:\work\charity\test.xlsx", 0, true, 5, "", "", true, Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+                Excel.Workbook excelWorkbook = excelApp.Workbooks.Open(parentPath + @"\test.xlsx", 0, true, 5, "", "", true, Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
                 Excel.Worksheet excelWorksheet = (Excel.Worksheet)excelWorkbook.Sheets[1];
 
                 Excel.Range excelRange = excelWorksheet.UsedRange;
@@ -122,7 +123,6 @@ namespace charity
             DataTable dtexcel = new DataTable();
             for(int i = 0; i< gridview.Columns.Count; i++)
             {
-                Console.WriteLine(gridview.Columns[i].Name);
                 dtexcel.Columns.Add(gridview.Columns[i].Name);
             }
             //dtexcel = gridview.DataSource as DataTable;
@@ -131,44 +131,35 @@ namespace charity
             charityData.inOutMoney = inOutcmbobox.Text;
             charityData.commentCharity = cmtBox.Text;
             if (gridview.DataSource != null)
-            {
-                Console.WriteLine(dtexcel.Rows.Count);
+            { 
                 dtexcel = gridview.DataSource as DataTable;
                 lastId = dtexcel.Rows.Count;
-                charityData.id = lastId;
                 workRow = dtexcel.NewRow();
-                workRow[@"Id"] = charityData.id;
-                workRow[@"Thu/Chi"] = charityData.inOutMoney;
-                workRow[@"Ngày"] = charityData.dateCharity;
-                workRow[@"Số Tiền"] = charityData.numberMoney;
-                workRow[@"Ghi Chú"] = charityData.commentCharity;
-                dtexcel.Rows.Add(workRow);
-                gridview.DataSource = dtexcel;
+                
             }
             else
             {
-                Console.WriteLine(0);
                 charityData.id = 0;
                 workRow = dtexcel.NewRow();
-                workRow[@"Id"] = charityData.id;
-                workRow[@"Thu/Chi"] = charityData.inOutMoney;
-                workRow[@"Ngày"] = charityData.dateCharity;
-                workRow[@"Số Tiền"] = charityData.numberMoney;
-                workRow[@"Ghi Chú"] = charityData.commentCharity;
-                dtexcel.Rows.Add(workRow);
                 gridview.Columns.Clear();
-                gridview.DataSource = dtexcel;
-
             }
-            
-            
+            charityData.id = lastId;
+            workRow[@"Id"] = charityData.id;
+            workRow[@"Thu/Chi"] = charityData.inOutMoney;
+            workRow[@"Ngày"] = charityData.dateCharity;
+            workRow[@"Số Tiền"] = charityData.numberMoney;
+            workRow[@"Ghi Chú"] = charityData.commentCharity;
+            dtexcel.Rows.Add(workRow);
+            gridview.DataSource = dtexcel;
+
+
             //if (!float.TryParse(moneyField.Text, out _))
             //{
             //    MessageBox.Show(@"Hãy điền số vào ô này");
             //}
             //else
             //{
-                
+
             //}
         }
     }
