@@ -91,6 +91,8 @@
             this.moneyField.Name = "moneyField";
             this.moneyField.Size = new System.Drawing.Size(262, 28);
             this.moneyField.TabIndex = 3;
+            this.moneyField.Text = "0";
+            this.moneyField.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.moneyField_KeyPress);
             // 
             // label12
             // 
