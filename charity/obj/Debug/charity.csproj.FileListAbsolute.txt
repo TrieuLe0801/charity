@@ -12,3 +12,4 @@ D:\work\charity\charity\obj\Debug\charity.addData.resources
 D:\work\charity\charity\bin\Debug\System.Data.OleDb.dll
 D:\work\charity\charity\bin\Debug\System.Data.OleDb.xml
 D:\work\charity\charity\obj\Debug\charity.csproj.CopyComplete
+D:\work\charity\charity\obj\Debug\charity.Report.resources

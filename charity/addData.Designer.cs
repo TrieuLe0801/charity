@@ -114,6 +114,7 @@
             this.cancelBtn.TabIndex = 6;
             this.cancelBtn.Text = "Hủy";
             this.cancelBtn.UseVisualStyleBackColor = true;
+            this.cancelBtn.Click += new System.EventHandler(this.cancelBtn_Click);
             // 
             // addBtn
             // 
@@ -198,6 +199,7 @@
             this.gridview.Location = new System.Drawing.Point(119, 266);
             this.gridview.Margin = new System.Windows.Forms.Padding(4);
             this.gridview.Name = "gridview";
+            this.gridview.ReadOnly = true;
             this.gridview.Size = new System.Drawing.Size(1009, 228);
             this.gridview.TabIndex = 7;
             // 

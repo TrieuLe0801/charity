@@ -73,7 +73,7 @@ namespace charity
             }
         }
 
-        public void ReadSample()
+        public void ReadSample(DataGridView dataGridView, DataTable dataTable)
         {
             if (excelApp != null)
             {
@@ -87,18 +87,23 @@ namespace charity
                 for (int i = 1; i <= rowCount; i++)
                 {
                     if (i != 1)
-                        row = dtexcel.NewRow();
+                        row = dataTable.NewRow();
                     for (int j = 1; j <= colCount; j++)
                     {
                         if (i == 1)
-                            dtexcel.Columns.Add(excelRange.Cells[1, j].value);
+                            dataTable.Columns.Add(excelRange.Cells[1, j].value);
                         else
-                            row[j - 1] = excelRange.Cells[i, j].value;
+                        {
+                            if(!String.IsNullOrEmpty(excelRange.Cells[i, 1].value2.ToString()))
+                            {
+                                row[j - 1] = excelRange.Cells[i, j].value;
+                            }
+                        }
                     }
-                    if (row != null)
-                        dtexcel.Rows.Add(row);
+                    if (row != null && !String.IsNullOrEmpty(row[@"Id"].ToString()))
+                        dataTable.Rows.Add(row);
                 }
-                gridview.DataSource = dtexcel;
+                dataGridView.DataSource = dataTable;
 
                 //// Get the sheet's values.
                 //object[,] values = (object[,])excelRange.Value2;
@@ -116,7 +121,7 @@ namespace charity
         public addData()
         {
             InitializeComponent();
-            ReadSample();
+            ReadSample(gridview, dtexcel);
             Console.WriteLine(dtexcel.Rows.Count);
             //String name = "Sheet1";
             //String constr = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" +
@@ -150,7 +155,7 @@ namespace charity
             Data.Data charityData = new Data.Data();
             //DataTable dtexcel = new DataTable();
             
-            charityData.dateCharity = this.dateTimePicker1.Value.Date.ToString("dd/MM/yyyy");
+            charityData.dateCharity = this.dateTimePicker1.Value.Date;
             charityData.numberMoney = float.Parse(moneyField.Text, CultureInfo.InvariantCulture);
             charityData.inOutMoney = inOutcmbobox.Text;
             charityData.commentCharity = cmtBox.Text;
@@ -166,7 +171,8 @@ namespace charity
            
                 charityData.id = 0;
                 workRow = dtexcel.NewRow();
-                gridview.Columns.Clear();
+                Console.WriteLine(dtexcel.Rows.Count);
+                //gridview.Columns.Clear();
             }
             charityData.id = lastId;
             workRow[@"Id"] = charityData.id;
@@ -175,11 +181,12 @@ namespace charity
             workRow[@"Số Tiền"] = charityData.numberMoney;
             workRow[@"Ghi Chú"] = charityData.commentCharity;
             dtexcel.Rows.Add(workRow);
+            Console.WriteLine(dtexcel.Rows.Count);
             //dtexcel.AcceptChanges();
             //gridview.Rows.Clear();
             //gridview.Columns.Clear();
             //gridview.Refresh();
-            gridview.DataSource = dtexcel;
+            //gridview.DataSource = dtexcel;
 
             //save data
             Excel.Application xlApp;
@@ -219,6 +226,10 @@ namespace charity
             {
                 throw ex;
             }
+            this.dateTimePicker1.Value = DateTime.Now;
+            this.inOutcmbobox.SelectedIndex = 0;
+            this.moneyField.Text = "0";
+            this.cmtBox.Text = "";
         }
 
         private void moneyField_KeyPress(object sender, KeyPressEventArgs e)
@@ -228,6 +239,14 @@ namespace charity
             {
                 e.Handled = true;
             }
+        }
+
+        private void cancelBtn_Click(object sender, EventArgs e)
+        {
+            this.dateTimePicker1.Value = DateTime.Now;
+            this.inOutcmbobox.SelectedIndex = 0;
+            this.moneyField.Text = "0";
+            this.cmtBox.Text = "";
         }
 
 

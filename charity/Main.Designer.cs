@@ -39,7 +39,7 @@
             this.label1.Font = new System.Drawing.Font("Times", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(478, 114);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(276, 43);
+            this.label1.Size = new System.Drawing.Size(264, 42);
             this.label1.TabIndex = 0;
             this.label1.Text = "ƯỚC MƠ XANH";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -62,6 +62,7 @@
             this.viewBtn.TabIndex = 1;
             this.viewBtn.Text = "View and Export";
             this.viewBtn.UseVisualStyleBackColor = true;
+            this.viewBtn.Click += new System.EventHandler(this.viewBtn_Click);
             // 
             // Main
             // 
