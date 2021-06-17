@@ -19,42 +19,7 @@ namespace charity
     {
         public DataTable dtexcel = new DataTable();
         Excel.Application excelApp = new Excel.Application();
-        string parentPath = System.IO.Directory.GetParent(System.IO.Directory.GetParent(System.IO.Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString();
-        // Set the grid's column names from row 1.
-        private void SetGridColumns(DataGridView dgv,
-            object[,] values, int max_col)
-        {
-            dgv.Columns.Clear();
-
-            // Get the title values.
-            for (int col = 1; col <= max_col; col++)
-            {
-                string title = (string)values[1, col];
-                dgv.Columns.Add(title, title);
-            }
-        }
-
-        // Set the grid's contents.
-        private void SetGridContents(DataGridView dgv,
-            object[,] values, int max_row, int max_col)
-        {
-            // Copy the values into the grid.
-            for (int row = 2; row <= max_row; row++)
-            {
-                object[] row_values = new object[max_col];
-                DataRow Row = dtexcel.NewRow();
-                for (int col = 1; col <= max_col; col++)
-                    if(values[row, col] != null)
-                    {
-                        row_values[col - 1] = values[row, col].ToString();
-                    }
-                dgv.Rows.Add(row_values);
-                //else
-                //{
-                //    row_values[col - 1] = values[row, col];
-                //}
-            }
-        }
+        public string parentPath = System.IO.Directory.GetParent(System.IO.Directory.GetParent(System.IO.Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString();
 
         private static void releaseObject(object obj)
         {
@@ -70,6 +35,88 @@ namespace charity
             finally
             {
                 GC.Collect();
+            }
+        }
+
+        public void SaveDataTable(DataTable dt, String filePath)
+        {
+            Excel.Application xlApp;
+            Excel.Workbook xlWorkBook;
+            Excel.Worksheet xlWorkSheet;
+            object misValue = System.Reflection.Missing.Value;
+
+            try
+            {
+                //Previous code was referring to the wrong class, throwing an exception
+                xlApp = new Excel.Application();
+                xlWorkBook = xlApp.Workbooks.Add(misValue);
+                xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+                for (int i = 0; i < dt.Columns.Count; i++)
+                {
+                    xlWorkSheet.Cells[1, i + 1] = dt.Columns[i].ColumnName;
+                }
+
+                for (int i = 0; i <= dt.Rows.Count - 1; i++)
+                {
+                    for (int j = 0; j <= dt.Columns.Count - 1; j++)
+                    {
+                        xlWorkSheet.Cells[i + 2, j + 1] = dt.Rows[i][j].ToString();
+                    }
+                }
+                xlApp.DisplayAlerts = false;
+                xlWorkBook.SaveAs(filePath); 
+                xlWorkBook.Close(true, misValue, misValue);
+                xlApp.Quit();
+
+                releaseObject(xlApp);
+                releaseObject(xlWorkBook);
+                releaseObject(xlWorkSheet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void SaveDataGridView(DataGridView dg, String filePath)
+        {
+            Excel.Application xlApp;
+            Excel.Workbook xlWorkBook;
+            Excel.Worksheet xlWorkSheet;
+            object misValue = System.Reflection.Missing.Value;
+
+            try
+            {
+                //Previous code was referring to the wrong class, throwing an exception
+                xlApp = new Excel.Application();
+                xlWorkBook = xlApp.Workbooks.Add(misValue);
+                xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+                for (int i = 0; i < dg.Columns.Count; i++)
+                {
+                    xlWorkSheet.Cells[1, i + 1] = dg.Columns[i].Name;
+                }
+
+                for (int i = 0; i <= dg.Rows.Count - 1; i++)
+                {
+                    for (int j = 0; j <= dg.Columns.Count - 1; j++)
+                    {
+                        xlWorkSheet.Cells[i + 2, j + 1] = dg.Rows[i].Cells[j].Value.ToString();
+                    }
+                }
+                xlApp.DisplayAlerts = false;
+                xlWorkBook.SaveAs(filePath);
+                xlWorkBook.Close(true, misValue, misValue);
+                xlApp.Quit();
+
+                releaseObject(xlApp);
+                releaseObject(xlWorkBook);
+                releaseObject(xlWorkSheet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
@@ -104,16 +151,6 @@ namespace charity
                         dataTable.Rows.Add(row);
                 }
                 dataGridView.DataSource = dataTable;
-
-                //// Get the sheet's values.
-                //object[,] values = (object[,])excelRange.Value2;
-
-                //// Get the column titles.
-                //SetGridColumns(gridview, values, colCount);
-
-                //// Get the data.
-                //SetGridContents(gridview, values, rowCount, colCount);
-
                 excelWorkbook.Close();
                 excelApp.Quit();
             }
@@ -122,22 +159,6 @@ namespace charity
         {
             InitializeComponent();
             ReadSample(gridview, dtexcel);
-            Console.WriteLine(dtexcel.Rows.Count);
-            //String name = "Sheet1";
-            //String constr = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" +
-            //                @"D:\work\charity\test.xlsx" +
-            //                ";Extended Properties='Excel 8.0;HDR=YES;';";
-
-            //OleDbConnection con = new OleDbConnection(constr);
-            //OleDbCommand oconn = new OleDbCommand("Select * From [" + name + "$]", con);
-            //con.Open();
-
-            //OleDbDataAdapter sda = new OleDbDataAdapter(oconn);
-            //DataTable data = new DataTable();
-            //sda.Fill(data);
-            //gridview.DataSource = data;
-            //gridview.Visible = true;
-
         }
 
         private void exitBtn_Click(object sender, EventArgs e)
@@ -153,17 +174,15 @@ namespace charity
             int lastId = 0;
             DataRow workRow;
             Data.Data charityData = new Data.Data();
-            //DataTable dtexcel = new DataTable();
-            
+
             charityData.dateCharity = this.dateTimePicker1.Value.Date;
             charityData.numberMoney = float.Parse(moneyField.Text, CultureInfo.InvariantCulture);
             charityData.inOutMoney = inOutcmbobox.Text;
             charityData.commentCharity = cmtBox.Text;
             if (dtexcel.Rows.Count > 0)
             {
-                Console.WriteLine($"Pass {gridview.Rows.Count}");
-                //dtexcel = gridview.DataSource as DataTable;
-                lastId = dtexcel.Rows.Count;
+                DataRow row = dtexcel.AsEnumerable().Last();
+                lastId = Int32.Parse(row[@"Id"].ToString()) + 1;
                 workRow = dtexcel.NewRow();
             }
             else
@@ -172,7 +191,6 @@ namespace charity
                 charityData.id = 0;
                 workRow = dtexcel.NewRow();
                 Console.WriteLine(dtexcel.Rows.Count);
-                //gridview.Columns.Clear();
             }
             charityData.id = lastId;
             workRow[@"Id"] = charityData.id;
@@ -181,51 +199,9 @@ namespace charity
             workRow[@"Số Tiền"] = charityData.numberMoney;
             workRow[@"Ghi Chú"] = charityData.commentCharity;
             dtexcel.Rows.Add(workRow);
-            Console.WriteLine(dtexcel.Rows.Count);
-            //dtexcel.AcceptChanges();
-            //gridview.Rows.Clear();
-            //gridview.Columns.Clear();
-            //gridview.Refresh();
-            //gridview.DataSource = dtexcel;
 
             //save data
-            Excel.Application xlApp;
-            Excel.Workbook xlWorkBook;
-            Excel.Worksheet xlWorkSheet;
-            object misValue = System.Reflection.Missing.Value;
-
-            try
-            {
-                //Previous code was referring to the wrong class, throwing an exception
-                xlApp = new Excel.Application();
-                xlWorkBook = xlApp.Workbooks.Add(misValue);
-                xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
-
-                for (int i = 0; i < gridview.Columns.Count; i++)
-                {
-                    xlWorkSheet.Cells[1, i + 1] = gridview.Columns[i].Name;
-                }
-
-                for (int i = 0; i <= gridview.Rows.Count - 1; i++)
-                {
-                    for (int j = 0; j <= gridview.Columns.Count - 1; j++)
-                    {
-                        xlWorkSheet.Cells[i + 2, j + 1] = gridview.Rows[i].Cells[j].Value.ToString();
-                    }
-                }
-                xlApp.DisplayAlerts = false;
-                xlWorkBook.SaveAs(parentPath + @"\test.xlsx");
-                xlWorkBook.Close(true, misValue, misValue);
-                xlApp.Quit();
-
-                releaseObject(xlApp);
-                releaseObject(xlWorkBook);
-                releaseObject(xlWorkSheet);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            SaveDataGridView(gridview, parentPath + @"\test.xlsx");
             this.dateTimePicker1.Value = DateTime.Now;
             this.inOutcmbobox.SelectedIndex = 0;
             this.moneyField.Text = "0";
@@ -248,15 +224,5 @@ namespace charity
             this.moneyField.Text = "0";
             this.cmtBox.Text = "";
         }
-
-
-        //if (!float.TryParse(moneyField.Text, out _))
-        //{
-        //    MessageBox.Show(@"Hãy điền số vào ô này");
-        //}
-        //else
-        //{
-
-        //}
     }
 }

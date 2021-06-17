@@ -52,15 +52,14 @@
             // gridViewReport
             // 
             this.gridViewReport.AllowUserToAddRows = false;
-            this.gridViewReport.AllowUserToDeleteRows = false;
             this.gridViewReport.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridViewReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridViewReport.Location = new System.Drawing.Point(105, 105);
             this.gridViewReport.Margin = new System.Windows.Forms.Padding(4);
             this.gridViewReport.Name = "gridViewReport";
-            this.gridViewReport.ReadOnly = true;
             this.gridViewReport.Size = new System.Drawing.Size(998, 261);
             this.gridViewReport.TabIndex = 8;
+            this.gridViewReport.SelectionChanged += new System.EventHandler(this.gridViewReport_SelectionChanged);
             // 
             // dateFromPicker
             // 
@@ -187,6 +186,7 @@
             this.deleteBtn.TabIndex = 13;
             this.deleteBtn.Text = "Xóa dữ liệu";
             this.deleteBtn.UseVisualStyleBackColor = true;
+            this.deleteBtn.Click += new System.EventHandler(this.deleteBtn_Click);
             // 
             // updateBtn
             // 

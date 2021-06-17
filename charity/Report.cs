@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,11 +13,14 @@ namespace charity
 {
     public partial class Report : Form
     {
+        public addData addData = new addData();
         public DataTable dtReport = new DataTable();
         public DataTable dtCloned = new DataTable();
+        public charity.Data.Data itemData = new charity.Data.Data();
         public float totalInMoney = 0;
         public float totalOutMoney = 0;
         public float totalSumary = 0;
+        public ArrayList listChairtyData = new ArrayList();
         public void UpdateValueReport(DataTable dt)
         {
             // calculate in money
@@ -33,7 +37,6 @@ namespace charity
         }
         public Report()
         {
-            addData addData = new addData();
             InitializeComponent();
             addData.ReadSample(gridViewReport, dtReport);
             DataTable dtCloned = dtReport.Clone();
@@ -85,6 +88,47 @@ namespace charity
                     @"Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 this.dateFromPicker.Value = DateTime.Now;
                 this.dateToPicker.Value = DateTime.Now;
+            }
+        }
+
+        private void gridViewReport_SelectionChanged(object sender, EventArgs e)
+        {
+            listChairtyData = new ArrayList();
+            foreach (DataGridViewRow row in gridViewReport.SelectedRows)
+            {
+                itemData.id = Int32.Parse(row.Cells[@"Id"].Value.ToString());
+                itemData.dateCharity = DateTime.Parse(row.Cells[@"Ngày"].Value.ToString());
+                itemData.inOutMoney = row.Cells[@"Thu/Chi"].Value.ToString();
+                itemData.numberMoney = float.Parse(row.Cells[@"Số Tiền"].Value.ToString());
+                itemData.commentCharity = row.Cells[@"Ghi Chú"].Value.ToString();
+                listChairtyData.Add(itemData);
+            }
+
+        }
+
+        private void deleteBtn_Click(object sender, EventArgs e)
+        {
+            if(listChairtyData.Count > 0)
+            {
+                DialogResult res = MessageBox.Show(@"Bạn chắc chắn muốn xóa những dòng này?",
+                    @"Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if(res == DialogResult.Yes)
+                {
+                    Console.WriteLine($"list data items:{listChairtyData.Count}");
+                    foreach(charity.Data.Data dataRow in listChairtyData)
+                    {
+                        gridViewReport.Rows.Cast<DataGridViewRow>().Where(r => Int32.Parse(r.Cells[@"Id"].Value.ToString()) == dataRow.id).ToList().ForEach(r => gridViewReport.Rows.Remove(r));
+                        dtReport.Rows.Cast<DataRow>().Where(r => r.Field<int>(@"Id") == dataRow.id).ToList().ForEach(r => r.Delete());
+                    }
+                    DataTable filterTable = (DataTable)gridViewReport.DataSource;
+                    UpdateValueReport(filterTable);
+                    addData.SaveDataTable(dtReport, addData.parentPath + @"\test.xlsx");
+
+                }
+                else
+                {
+                    gridViewReport.ClearSelection();
+                }
             }
         }
     }
