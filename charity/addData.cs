@@ -150,7 +150,17 @@ namespace charity
                     if (row != null && !String.IsNullOrEmpty(row[@"Id"].ToString()))
                         dataTable.Rows.Add(row);
                 }
-                dataGridView.DataSource = dataTable;
+                DataTable dtCloned = dataTable.Clone();
+                dtCloned.Columns[@"Id"].DataType = typeof(Int32);
+                dtCloned.Columns[@"Ngày"].DataType = typeof(DateTime);
+                dtCloned.Columns[@"Số Tiền"].DataType = typeof(float);
+                foreach (DataRow r in dataTable.Rows)
+                {
+                    dtCloned.ImportRow(r);
+                }
+                // update type for table report
+                //dataTable = dtCloned;
+                dataGridView.DataSource = dtCloned;
                 excelWorkbook.Close();
                 excelApp.Quit();
             }
@@ -208,7 +218,7 @@ namespace charity
             this.cmtBox.Text = "";
         }
 
-        private void moneyField_KeyPress(object sender, KeyPressEventArgs e)
+        public void moneyField_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
                 (e.KeyChar != '.'))

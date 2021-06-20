@@ -16,6 +16,7 @@ namespace charity
         public addData addData = new addData();
         public DataTable dtReport = new DataTable();
         public DataTable dtCloned = new DataTable();
+        public DataTable dtReflesh = new DataTable();
         public charity.Data.Data itemData = new charity.Data.Data();
         public float totalInMoney = 0;
         public float totalOutMoney = 0;
@@ -46,10 +47,11 @@ namespace charity
             foreach (DataRow row in dtReport.Rows)
             {
                 dtCloned.ImportRow(row);
-                Console.WriteLine(dtCloned.Columns[@"Ngày"].DataType);
             }
             // update type for table report
             dtReport = dtCloned;
+            dtReflesh = dtCloned;
+            //gridViewReport.DataSource = dtReport;
             UpdateValueReport(dtReport);
         }
 
@@ -63,7 +65,10 @@ namespace charity
         private void showAllBtn_Click(object sender, EventArgs e)
         {
             gridViewReport.DataSource = dtReport;
+            dtReflesh = dtReport;
             UpdateValueReport(dtReport);
+            this.dateFromPicker.Value = DateTime.Now;
+            this.dateToPicker.Value = DateTime.Now;
         }
 
         private void searchBtn_Click(object sender, EventArgs e)
@@ -80,6 +85,7 @@ namespace charity
                     filterTable.ImportRow(row);
                 }
                 gridViewReport.DataSource = filterTable;
+                dtReflesh = filterTable;
                 UpdateValueReport(filterTable);
             }
             else
@@ -108,7 +114,7 @@ namespace charity
 
         private void deleteBtn_Click(object sender, EventArgs e)
         {
-            if(listChairtyData.Count > 0)
+            if (listChairtyData.Count > 0)
             {
                 DialogResult res = MessageBox.Show(@"Bạn chắc chắn muốn xóa những dòng này?",
                     @"Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -120,7 +126,7 @@ namespace charity
                         gridViewReport.Rows.Cast<DataGridViewRow>().Where(r => Int32.Parse(r.Cells[@"Id"].Value.ToString()) == dataRow.id).ToList().ForEach(r => gridViewReport.Rows.Remove(r));
                         dtReport.Rows.Cast<DataRow>().Where(r => r.Field<int>(@"Id") == dataRow.id).ToList().ForEach(r => r.Delete());
                     }
-                    DataTable filterTable = (DataTable)gridViewReport.DataSource;
+                    DataTable filterTable = (DataTable)gridViewReport.DataSource; ;
                     UpdateValueReport(filterTable);
                     addData.SaveDataTable(dtReport, addData.parentPath + @"\test.xlsx");
 
@@ -128,6 +134,52 @@ namespace charity
                 else
                 {
                     gridViewReport.ClearSelection();
+                }
+            }
+        }
+
+        private void updateBtn_Click(object sender, EventArgs e)
+        {
+            DialogResult res = MessageBox.Show(@"Bạn chắc chắn muốn lưu lại những dòng này?",
+                    @"Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (res == DialogResult.Yes)
+            {
+                listChairtyData = new ArrayList();
+                foreach (DataGridViewRow row in gridViewReport.Rows)
+                {
+                    itemData.id = Int32.Parse(row.Cells[@"Id"].Value.ToString());
+                    itemData.dateCharity = DateTime.Parse(row.Cells[@"Ngày"].Value.ToString());
+                    itemData.inOutMoney = row.Cells[@"Thu/Chi"].Value.ToString();
+                    itemData.numberMoney = float.Parse(row.Cells[@"Số Tiền"].Value.ToString());
+                    itemData.commentCharity = row.Cells[@"Ghi Chú"].Value.ToString();
+                    dtReport.Rows.Cast<DataRow>().Where(r => r.Field<int>(@"Id") == itemData.id).ToList().ForEach(r =>
+                    {
+                        r[@"Ngày"] = itemData.dateCharity;
+                        r[@"Thu/Chi"] = itemData.inOutMoney;
+                        r[@"Số Tiền"] = itemData.numberMoney;
+                        r[@"Ghi Chú"] = itemData.commentCharity;
+                    });
+                }
+                DataTable filterTable = (DataTable)gridViewReport.DataSource;
+                UpdateValueReport(filterTable);
+                addData.SaveDataTable(dtReport, addData.parentPath + @"\test.xlsx");
+            }
+            else
+            {
+                gridViewReport.DataSource = dtReflesh;
+                UpdateValueReport(dtReflesh);
+            }
+        }
+
+        private void gridViewReport_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            e.Control.KeyPress -= new KeyPressEventHandler(addData.moneyField_KeyPress);
+            if(gridViewReport.CurrentCell.ColumnIndex == gridViewReport.Columns[@"Số Tiền"].Index)
+            {
+                TextBox tb = e.Control as TextBox;
+                if(tb != null)
+                {
+                    tb.KeyPress += new KeyPressEventHandler(addData.moneyField_KeyPress);
                 }
             }
         }

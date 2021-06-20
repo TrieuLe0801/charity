@@ -59,6 +59,7 @@
             this.gridViewReport.Name = "gridViewReport";
             this.gridViewReport.Size = new System.Drawing.Size(998, 261);
             this.gridViewReport.TabIndex = 8;
+            this.gridViewReport.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.gridViewReport_EditingControlShowing);
             this.gridViewReport.SelectionChanged += new System.EventHandler(this.gridViewReport_SelectionChanged);
             // 
             // dateFromPicker
@@ -198,6 +199,7 @@
             this.updateBtn.TabIndex = 13;
             this.updateBtn.Text = "Lưu chỉnh sửa";
             this.updateBtn.UseVisualStyleBackColor = true;
+            this.updateBtn.Click += new System.EventHandler(this.updateBtn_Click);
             // 
             // label5
             // 
