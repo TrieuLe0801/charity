@@ -45,6 +45,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.resetBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewReport)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -59,6 +60,8 @@
             this.gridViewReport.Name = "gridViewReport";
             this.gridViewReport.Size = new System.Drawing.Size(998, 261);
             this.gridViewReport.TabIndex = 8;
+            this.gridViewReport.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridViewReport_CellClick);
+            this.gridViewReport.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridViewReport_CellEndEdit);
             this.gridViewReport.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.gridViewReport_EditingControlShowing);
             this.gridViewReport.SelectionChanged += new System.EventHandler(this.gridViewReport_SelectionChanged);
             // 
@@ -97,7 +100,7 @@
             // searchBtn
             // 
             this.searchBtn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.searchBtn.Location = new System.Drawing.Point(723, 48);
+            this.searchBtn.Location = new System.Drawing.Point(661, 48);
             this.searchBtn.Margin = new System.Windows.Forms.Padding(4);
             this.searchBtn.Name = "searchBtn";
             this.searchBtn.Size = new System.Drawing.Size(131, 37);
@@ -110,7 +113,7 @@
             // 
             this.showAllBtn.AutoSize = true;
             this.showAllBtn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.showAllBtn.Location = new System.Drawing.Point(946, 48);
+            this.showAllBtn.Location = new System.Drawing.Point(818, 48);
             this.showAllBtn.Margin = new System.Windows.Forms.Padding(4);
             this.showAllBtn.Name = "showAllBtn";
             this.showAllBtn.Size = new System.Drawing.Size(131, 37);
@@ -228,6 +231,19 @@
             this.label3.TabIndex = 16;
             this.label3.Text = "Tổng thu:";
             // 
+            // resetBtn
+            // 
+            this.resetBtn.AutoSize = true;
+            this.resetBtn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.resetBtn.Location = new System.Drawing.Point(972, 48);
+            this.resetBtn.Margin = new System.Windows.Forms.Padding(4);
+            this.resetBtn.Name = "resetBtn";
+            this.resetBtn.Size = new System.Drawing.Size(131, 37);
+            this.resetBtn.TabIndex = 13;
+            this.resetBtn.Text = "Hủy thay đổi";
+            this.resetBtn.UseVisualStyleBackColor = true;
+            this.resetBtn.Click += new System.EventHandler(this.resetBtn_Click);
+            // 
             // Report
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -235,6 +251,7 @@
             this.ClientSize = new System.Drawing.Size(1221, 582);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.exitBtn);
+            this.Controls.Add(this.resetBtn);
             this.Controls.Add(this.showAllBtn);
             this.Controls.Add(this.searchBtn);
             this.Controls.Add(this.label2);
@@ -272,5 +289,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button resetBtn;
     }
 }

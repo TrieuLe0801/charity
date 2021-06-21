@@ -17,6 +17,8 @@ namespace charity
         public DataTable dtReport = new DataTable();
         public DataTable dtCloned = new DataTable();
         public DataTable dtReflesh = new DataTable();
+        public string changedCells = null;
+        public bool isChangeValue = false;
         public charity.Data.Data itemData = new charity.Data.Data();
         public float totalInMoney = 0;
         public float totalOutMoney = 0;
@@ -64,37 +66,54 @@ namespace charity
 
         private void showAllBtn_Click(object sender, EventArgs e)
         {
-            gridViewReport.DataSource = dtReport;
-            dtReflesh = dtReport;
-            UpdateValueReport(dtReport);
-            this.dateFromPicker.Value = DateTime.Now;
-            this.dateToPicker.Value = DateTime.Now;
+            if(isChangeValue == false)
+            {
+                gridViewReport.DataSource = dtReport;
+                dtReflesh = dtReport;
+                UpdateValueReport(dtReport);
+                this.dateFromPicker.Value = DateTime.Now;
+                this.dateToPicker.Value = DateTime.Now;
+            }
+            else
+            {
+                MessageBox.Show(@"Bạn đang có thông tin bị làm mới. Hãy lưu thay đổi hoặc hủy trước khi thực hiện thao tác tiếp theo",
+                      @"Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void searchBtn_Click(object sender, EventArgs e)
         {
-            DateTime startDate, endDate = new DateTime();
-            startDate = this.dateFromPicker.Value.Date;
-            endDate = this.dateToPicker.Value.Date;
-            if(startDate <= endDate)
+            if(isChangeValue == false)
             {
-                var filerRows = dtReport.AsEnumerable().Where(row => (row.Field<DateTime>(@"Ngày") >= startDate) && (row.Field<DateTime>(@"Ngày") <= endDate));
-                var filterTable = dtReport.Clone();
-                foreach (DataRow row in filerRows)
+                DateTime startDate, endDate = new DateTime();
+                startDate = this.dateFromPicker.Value.Date;
+                endDate = this.dateToPicker.Value.Date;
+                if (startDate <= endDate)
                 {
-                    filterTable.ImportRow(row);
+                    var filerRows = dtReport.AsEnumerable().Where(row => (row.Field<DateTime>(@"Ngày") >= startDate) && (row.Field<DateTime>(@"Ngày") <= endDate));
+                    var filterTable = dtReport.Clone();
+                    foreach (DataRow row in filerRows)
+                    {
+                        filterTable.ImportRow(row);
+                    }
+                    gridViewReport.DataSource = filterTable;
+                    dtReflesh = filterTable;
+                    UpdateValueReport(filterTable);
                 }
-                gridViewReport.DataSource = filterTable;
-                dtReflesh = filterTable;
-                UpdateValueReport(filterTable);
+                else
+                {
+                    MessageBox.Show(@"Kiểm tra lại ngày bắt đầu và ngày kết thúc. Hãy đảm bảo ngày bắt đầu giá trị bé hơn ngày kết thúc.",
+                        @"Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    this.dateFromPicker.Value = DateTime.Now;
+                    this.dateToPicker.Value = DateTime.Now;
+                }
             }
             else
             {
-                MessageBox.Show(@"Kiểm tra lại ngày bắt đầu và ngày kết thúc. Hãy đảm bảo ngày bắt đầu giá trị bé hơn ngày kết thúc.",
-                    @"Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                this.dateFromPicker.Value = DateTime.Now;
-                this.dateToPicker.Value = DateTime.Now;
+                MessageBox.Show(@"Bạn đang có thông tin bị làm mới. Hãy lưu thay đổi hoặc hủy trước khi thực hiện thao tác tiếp theo",
+                       @"Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+            
         }
 
         private void gridViewReport_SelectionChanged(object sender, EventArgs e)
@@ -140,34 +159,38 @@ namespace charity
 
         private void updateBtn_Click(object sender, EventArgs e)
         {
-            DialogResult res = MessageBox.Show(@"Bạn chắc chắn muốn lưu lại những dòng này?",
-                    @"Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (res == DialogResult.Yes)
+            if(isChangeValue == true)
             {
-                listChairtyData = new ArrayList();
-                foreach (DataGridViewRow row in gridViewReport.Rows)
+                DialogResult res = MessageBox.Show(@"Bạn chắc chắn muốn lưu lại những dòng này?",
+                   @"Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (res == DialogResult.Yes)
                 {
-                    itemData.id = Int32.Parse(row.Cells[@"Id"].Value.ToString());
-                    itemData.dateCharity = DateTime.Parse(row.Cells[@"Ngày"].Value.ToString());
-                    itemData.inOutMoney = row.Cells[@"Thu/Chi"].Value.ToString();
-                    itemData.numberMoney = float.Parse(row.Cells[@"Số Tiền"].Value.ToString());
-                    itemData.commentCharity = row.Cells[@"Ghi Chú"].Value.ToString();
-                    dtReport.Rows.Cast<DataRow>().Where(r => r.Field<int>(@"Id") == itemData.id).ToList().ForEach(r =>
+                    listChairtyData = new ArrayList();
+                    foreach (DataGridViewRow row in gridViewReport.Rows)
                     {
-                        r[@"Ngày"] = itemData.dateCharity;
-                        r[@"Thu/Chi"] = itemData.inOutMoney;
-                        r[@"Số Tiền"] = itemData.numberMoney;
-                        r[@"Ghi Chú"] = itemData.commentCharity;
-                    });
+                        itemData.id = Int32.Parse(row.Cells[@"Id"].Value.ToString());
+                        itemData.dateCharity = DateTime.Parse(row.Cells[@"Ngày"].Value.ToString());
+                        itemData.inOutMoney = row.Cells[@"Thu/Chi"].Value.ToString();
+                        itemData.numberMoney = float.Parse(row.Cells[@"Số Tiền"].Value.ToString());
+                        itemData.commentCharity = row.Cells[@"Ghi Chú"].Value.ToString();
+                        dtReport.Rows.Cast<DataRow>().Where(r => r.Field<int>(@"Id") == itemData.id).ToList().ForEach(r =>
+                        {
+                            r[@"Ngày"] = itemData.dateCharity;
+                            r[@"Thu/Chi"] = itemData.inOutMoney;
+                            r[@"Số Tiền"] = itemData.numberMoney;
+                            r[@"Ghi Chú"] = itemData.commentCharity;
+                        });
+                    }
+                    DataTable filterTable = (DataTable)gridViewReport.DataSource;
+                    UpdateValueReport(filterTable);
+                    addData.SaveDataTable(dtReport, addData.parentPath + @"\test.xlsx");
                 }
-                DataTable filterTable = (DataTable)gridViewReport.DataSource;
-                UpdateValueReport(filterTable);
-                addData.SaveDataTable(dtReport, addData.parentPath + @"\test.xlsx");
-            }
-            else
-            {
-                gridViewReport.DataSource = dtReflesh;
-                UpdateValueReport(dtReflesh);
+                else
+                {
+                    gridViewReport.DataSource = dtReflesh;
+                    UpdateValueReport(dtReflesh);
+                }
+                isChangeValue = false;
             }
         }
 
@@ -182,6 +205,35 @@ namespace charity
                     tb.KeyPress += new KeyPressEventHandler(addData.moneyField_KeyPress);
                 }
             }
+        }
+
+        private void gridViewReport_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            string newValue = gridViewReport.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+            Console.WriteLine(newValue);
+            if (!Equals(newValue, changedCells))
+            {
+                isChangeValue = true;
+                DataTable filterData = (DataTable)gridViewReport.DataSource as DataTable;
+                UpdateValueReport(filterData);
+            }
+            Console.WriteLine(isChangeValue);
+        }
+
+        private void resetBtn_Click(object sender, EventArgs e)
+        {
+            if(isChangeValue == true)
+            {
+                gridViewReport.DataSource = dtReflesh;
+                UpdateValueReport(dtReflesh);
+                isChangeValue = false;
+            }
+        }
+
+        private void gridViewReport_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            changedCells = gridViewReport.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+            Console.WriteLine(changedCells);
         }
     }
 }
