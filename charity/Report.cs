@@ -147,7 +147,7 @@ namespace charity
                     }
                     DataTable filterTable = (DataTable)gridViewReport.DataSource; ;
                     UpdateValueReport(filterTable);
-                    addData.SaveDataTable(dtReport, addData.parentPath + @"\test.xlsx");
+                    addData.SaveDataTable(dtReport, addData.parentPath + @"\db\test.xlsx");
 
                 }
                 else
@@ -183,7 +183,7 @@ namespace charity
                     }
                     DataTable filterTable = (DataTable)gridViewReport.DataSource;
                     UpdateValueReport(filterTable);
-                    addData.SaveDataTable(dtReport, addData.parentPath + @"\test.xlsx");
+                    addData.SaveDataTable(dtReport, addData.parentPath + @"\db\test.xlsx");
                 }
                 else
                 {

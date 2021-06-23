@@ -34,5 +34,32 @@ namespace charity
             this.Hide();
             Cursor.Current = Cursors.Default;
         }
+
+        private void exportBtn_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            string filePath = string.Empty;
+            saveFileDialog.InitialDirectory = System.IO.Directory.GetParent(System.IO.Directory.GetParent(System.IO.Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString();
+            saveFileDialog.Filter = "excel files (*.xls)|*.xls|*.xlsx|*.xlsx";
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.CreatePrompt = true;
+            saveFileDialog.FilterIndex = 2;
+            saveFileDialog.Title = "Export File";
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                addData addData = new addData();
+                DataTable dataTable = new DataTable();
+                if (saveFileDialog.FileName != null)
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                    filePath = saveFileDialog.FileName;
+                    addData.ReadSample(null, dataTable);
+                    addData.SaveDataTable(dataTable, filePath);
+                    Cursor.Current = Cursors.Default;
+                    MessageBox.Show(@"Toàn bộ dữ liệu đã được xuất ra file excel",
+                     @"Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                }
+            }
+        }
     }
 }

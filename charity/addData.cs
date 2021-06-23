@@ -120,11 +120,11 @@ namespace charity
             }
         }
 
-        public void ReadSample(DataGridView dataGridView, DataTable dataTable)
+        public void ReadSample(DataGridView dataGridView = null, DataTable dataTable = null)
         {
             if (excelApp != null)
             {
-                Excel.Workbook excelWorkbook = excelApp.Workbooks.Open(parentPath + @"\test.xlsx", 0, true, 5, "", "", true, Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+                Excel.Workbook excelWorkbook = excelApp.Workbooks.Open(parentPath + @"\db\test.xlsx", 0, true, 5, "", "", true, Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
                 Excel.Worksheet excelWorksheet = (Excel.Worksheet)excelWorkbook.Sheets[1];
 
                 Excel.Range excelRange = excelWorksheet.UsedRange;
@@ -158,9 +158,9 @@ namespace charity
                 {
                     dtCloned.ImportRow(r);
                 }
-                // update type for table report
-                //dataTable = dtCloned;
-                dataGridView.DataSource = dtCloned;
+                // update type for table
+                if (dataGridView != null)
+                    dataGridView.DataSource = dtCloned;
                 excelWorkbook.Close();
                 excelApp.Quit();
             }
@@ -173,9 +173,9 @@ namespace charity
 
         private void exitBtn_Click(object sender, EventArgs e)
         {
-            this.Hide();
             Main main = new Main();
             main.Show();
+            this.Hide();
         }
 
         private void addBtn_Click(object sender, EventArgs e)
@@ -200,7 +200,6 @@ namespace charity
            
                 charityData.id = 0;
                 workRow = dtexcel.NewRow();
-                Console.WriteLine(dtexcel.Rows.Count);
             }
             charityData.id = lastId;
             workRow[@"Id"] = charityData.id;
@@ -209,10 +208,10 @@ namespace charity
             workRow[@"Số Tiền"] = charityData.numberMoney;
             workRow[@"Ghi Chú"] = charityData.commentCharity;
             dtexcel.Rows.Add(workRow);
+            gridview.DataSource = dtexcel;
 
             //save data
-            SaveDataGridView(gridview, parentPath + @"\test.xlsx");
-            this.dateTimePicker1.Value = DateTime.Now;
+            SaveDataGridView(gridview, parentPath + @"\db\test.xlsx");
             this.inOutcmbobox.SelectedIndex = 0;
             this.moneyField.Text = "0";
             this.cmtBox.Text = "";
