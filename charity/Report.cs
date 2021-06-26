@@ -147,7 +147,7 @@ namespace charity
                     }
                     DataTable filterTable = (DataTable)gridViewReport.DataSource; ;
                     UpdateValueReport(filterTable);
-                    addData.SaveDataTable(dtReport, addData.parentPath + @"\db\test.xlsx");
+                    addData.SaveDataTable(dtReport, @"\db\test.xlsx");
 
                 }
                 else
@@ -183,7 +183,7 @@ namespace charity
                     }
                     DataTable filterTable = (DataTable)gridViewReport.DataSource;
                     UpdateValueReport(filterTable);
-                    addData.SaveDataTable(dtReport, addData.parentPath + @"\db\test.xlsx");
+                    addData.SaveDataTable(dtReport,@"\db\test.xlsx");
                 }
                 else
                 {
@@ -232,8 +232,8 @@ namespace charity
 
         private void gridViewReport_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            changedCells = gridViewReport.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-            Console.WriteLine(changedCells);
+            if (e.ColumnIndex >= 0)
+                changedCells = gridViewReport.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
         }
     }
 }

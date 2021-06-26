@@ -124,7 +124,7 @@ namespace charity
         {
             if (excelApp != null)
             {
-                Excel.Workbook excelWorkbook = excelApp.Workbooks.Open(parentPath + @"\db\test.xlsx", 0, true, 5, "", "", true, Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+                Excel.Workbook excelWorkbook = excelApp.Workbooks.Open(@"\db\test.xlsx", 0, true, 5, "", "", true, Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
                 Excel.Worksheet excelWorksheet = (Excel.Worksheet)excelWorkbook.Sheets[1];
 
                 Excel.Range excelRange = excelWorksheet.UsedRange;
@@ -211,7 +211,7 @@ namespace charity
             gridview.DataSource = dtexcel;
 
             //save data
-            SaveDataGridView(gridview, parentPath + @"\db\test.xlsx");
+            SaveDataGridView(gridview, @"\db\test.xlsx");
             this.inOutcmbobox.SelectedIndex = 0;
             this.moneyField.Text = "0";
             this.cmtBox.Text = "";

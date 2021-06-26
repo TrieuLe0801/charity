@@ -39,58 +39,57 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Times", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(358, 93);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(477, 114);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(218, 35);
+            this.label1.Size = new System.Drawing.Size(264, 42);
             this.label1.TabIndex = 0;
             this.label1.Text = "ƯỚC MƠ XANH";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // addDataBtn
             // 
-            this.addDataBtn.Location = new System.Drawing.Point(400, 151);
-            this.addDataBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.addDataBtn.Location = new System.Drawing.Point(533, 186);
+            this.addDataBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.addDataBtn.Name = "addDataBtn";
-            this.addDataBtn.Size = new System.Drawing.Size(125, 67);
+            this.addDataBtn.Size = new System.Drawing.Size(167, 82);
             this.addDataBtn.TabIndex = 1;
-            this.addDataBtn.Text = "Add data";
+            this.addDataBtn.Text = "Thêm thông tin";
             this.addDataBtn.UseVisualStyleBackColor = true;
             this.addDataBtn.Click += new System.EventHandler(this.addDataBtn_Click);
             // 
             // viewBtn
             // 
-            this.viewBtn.Location = new System.Drawing.Point(400, 258);
-            this.viewBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.viewBtn.Location = new System.Drawing.Point(533, 318);
+            this.viewBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.viewBtn.Name = "viewBtn";
-            this.viewBtn.Size = new System.Drawing.Size(125, 67);
+            this.viewBtn.Size = new System.Drawing.Size(167, 82);
             this.viewBtn.TabIndex = 1;
-            this.viewBtn.Text = "View";
+            this.viewBtn.Text = "Xem dữ liệu";
             this.viewBtn.UseVisualStyleBackColor = true;
             this.viewBtn.Click += new System.EventHandler(this.viewBtn_Click);
             // 
             // exportBtn
             // 
-            this.exportBtn.Location = new System.Drawing.Point(400, 364);
-            this.exportBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.exportBtn.Location = new System.Drawing.Point(533, 448);
+            this.exportBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.exportBtn.Name = "exportBtn";
-            this.exportBtn.Size = new System.Drawing.Size(125, 67);
+            this.exportBtn.Size = new System.Drawing.Size(167, 82);
             this.exportBtn.TabIndex = 1;
-            this.exportBtn.Text = "Export";
+            this.exportBtn.Text = "Xuất dữ liệu";
             this.exportBtn.UseVisualStyleBackColor = true;
             this.exportBtn.Click += new System.EventHandler(this.exportBtn_Click);
             // 
             // Main
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(916, 473);
+            this.ClientSize = new System.Drawing.Size(1221, 582);
             this.Controls.Add(this.exportBtn);
             this.Controls.Add(this.viewBtn);
             this.Controls.Add(this.addDataBtn);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximizeBox = false;
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
