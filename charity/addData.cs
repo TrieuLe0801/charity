@@ -20,7 +20,7 @@ namespace charity
         public DataTable dtexcel = new DataTable();
         Excel.Application excelApp = new Excel.Application();
         public string parentPath = System.IO.Directory.GetParent(System.IO.Directory.GetParent(System.IO.Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString();
-
+        public string currentPath = Environment.CurrentDirectory.ToString();
         private static void releaseObject(object obj)
         {
             try
@@ -124,7 +124,7 @@ namespace charity
         {
             if (excelApp != null)
             {
-                Excel.Workbook excelWorkbook = excelApp.Workbooks.Open(@"\db\test.xlsx", 0, true, 5, "", "", true, Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+                Excel.Workbook excelWorkbook = excelApp.Workbooks.Open(currentPath + @"\db\test.xlsx", 0, true, 5, "", "", true, Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
                 Excel.Worksheet excelWorksheet = (Excel.Worksheet)excelWorkbook.Sheets[1];
 
                 Excel.Range excelRange = excelWorksheet.UsedRange;
@@ -211,7 +211,7 @@ namespace charity
             gridview.DataSource = dtexcel;
 
             //save data
-            SaveDataGridView(gridview, @"\db\test.xlsx");
+            SaveDataGridView(gridview, currentPath + @"\db\test.xlsx");
             this.inOutcmbobox.SelectedIndex = 0;
             this.moneyField.Text = "0";
             this.cmtBox.Text = "";
